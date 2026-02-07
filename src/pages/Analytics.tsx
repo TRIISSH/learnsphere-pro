@@ -1,5 +1,5 @@
 import { useCourses } from "@/hooks/useCourses";
-import { TrendingUp, Target, BookOpen, Trophy } from "lucide-react";
+import { TrendingUp, Target, BookOpen, Trophy, PieChart } from "lucide-react";
 import StatCard from "@/components/StatCard";
 import { Progress } from "@/components/ui/progress";
 import { motion } from "framer-motion";
@@ -36,21 +36,24 @@ export default function Analytics() {
   const subjectMap = new Map<string, { total: number; done: number }>();
   courses?.forEach((c) => {
     const existing = subjectMap.get(c.subject) || { total: 0, done: 0 };
-    subjectMap.set(c.subject, {
-      total: existing.total + c.totalChapters,
-      done: existing.done + c.completedCount,
-    });
+    subjectMap.set(c.subject, { total: existing.total + c.totalChapters, done: existing.done + c.completedCount });
   });
 
-  const diffColors = { beginner: "text-success", intermediate: "text-info", advanced: "text-accent" };
-  const diffBg = { beginner: "bg-success", intermediate: "bg-info", advanced: "bg-accent" };
+  const diffColors = { beginner: "text-primary", intermediate: "text-accent", advanced: "text-info" };
+  const diffBg = { beginner: "bg-primary", intermediate: "bg-accent", advanced: "bg-info" };
 
   return (
-    <div className="p-6 md:p-8 max-w-6xl mx-auto space-y-8">
+    <div className="p-6 md:p-8 max-w-6xl mx-auto space-y-8 finance-grid min-h-screen">
       <motion.header initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+        <div className="flex items-center gap-2 mb-1">
+          <PieChart className="h-4 w-4 text-accent" />
+          <span className="text-xs font-medium text-accent uppercase tracking-wider">Portfolio Analytics</span>
+        </div>
         <h1 className="text-2xl md:text-3xl font-heading font-bold">Performance Analytics</h1>
-        <p className="text-muted-foreground mt-1">Deep dive into your learning patterns</p>
+        <p className="text-muted-foreground mt-1">Deep dive into your financial learning portfolio</p>
       </motion.header>
+
+      <div className="ticker-line w-full rounded-full" />
 
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard icon={TrendingUp} label="Overall Progress" value={`${overallProgress}%`} variant="primary" />
@@ -60,7 +63,8 @@ export default function Analytics() {
       </section>
 
       <section className="grid lg:grid-cols-2 gap-6">
-        <div className="rounded-2xl border border-border bg-card p-6 space-y-5">
+        <div className="rounded-2xl border border-border bg-card p-6 space-y-5 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-accent/5 rounded-bl-full" />
           <h2 className="font-heading font-semibold text-lg">Progress by Level</h2>
           {byDifficulty.map((d) => (
             <div key={d.difficulty} className="space-y-2">
@@ -82,7 +86,8 @@ export default function Analytics() {
           ))}
         </div>
 
-        <div className="rounded-2xl border border-border bg-card p-6 space-y-4">
+        <div className="rounded-2xl border border-border bg-card p-6 space-y-4 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full" />
           <h2 className="font-heading font-semibold text-lg">Progress by Subject</h2>
           {Array.from(subjectMap.entries()).map(([subject, data]) => {
             const pct = data.total > 0 ? Math.round((data.done / data.total) * 100) : 0;
@@ -90,7 +95,7 @@ export default function Analytics() {
               <div key={subject} className="space-y-1.5">
                 <div className="flex justify-between text-sm">
                   <span className="font-medium">{subject}</span>
-                  <span className="text-muted-foreground">{pct}%</span>
+                  <span className="text-accent font-heading font-semibold">{pct}%</span>
                 </div>
                 <Progress value={pct} className="h-2" />
               </div>
@@ -99,7 +104,8 @@ export default function Analytics() {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-border bg-card p-6">
+      <section className="rounded-2xl border border-border bg-card p-6 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-accent/3 rounded-bl-full" />
         <h2 className="font-heading font-semibold text-lg mb-4">Course Breakdown</h2>
         <div className="space-y-3">
           {courses?.map((c) => (
@@ -112,7 +118,7 @@ export default function Analytics() {
                 </div>
                 <Progress value={c.progress} className="h-1.5" />
               </div>
-              <span className="text-sm font-heading font-bold text-primary w-12 text-right">{c.progress}%</span>
+              <span className="text-sm font-heading font-bold text-accent w-12 text-right">{c.progress}%</span>
             </div>
           ))}
         </div>

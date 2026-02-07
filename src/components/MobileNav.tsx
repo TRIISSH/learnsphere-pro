@@ -10,7 +10,7 @@ const navItems = [
 
 export default function MobileNav() {
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border z-50">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-card/90 backdrop-blur-lg border-t border-border z-50">
       <div className="flex justify-around py-2">
         {navItems.map((item) => (
           <NavLink
@@ -19,7 +19,7 @@ export default function MobileNav() {
             end={item.to === "/"}
             className={({ isActive }) =>
               `flex flex-col items-center gap-1 px-3 py-1.5 text-xs font-medium transition-colors ${
-                isActive ? "text-primary" : "text-muted-foreground"
+                isActive ? "text-accent" : "text-muted-foreground"
               }`
             }
           >
