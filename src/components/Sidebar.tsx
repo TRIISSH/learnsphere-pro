@@ -1,5 +1,7 @@
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, BookOpen, BarChart3, Lightbulb, GraduationCap } from "lucide-react";
+import { LayoutDashboard, BookOpen, BarChart3, Lightbulb, GraduationCap, LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
 
 const navItems = [
   { to: "/", icon: LayoutDashboard, label: "Dashboard" },
@@ -9,6 +11,11 @@ const navItems = [
 ];
 
 export default function Sidebar() {
+  const { displayName, signOut } = useAuth();
+  const initials = displayName
+    ? displayName.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
+    : "ST";
+
   return (
     <aside className="hidden md:flex w-64 flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border min-h-screen p-6">
       <div className="flex items-center gap-2 mb-10">
@@ -36,16 +43,24 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      <div className="mt-auto pt-6 border-t border-sidebar-border">
+      <div className="mt-auto pt-6 border-t border-sidebar-border space-y-3">
         <div className="flex items-center gap-3">
           <div className="h-9 w-9 rounded-full bg-sidebar-primary/20 flex items-center justify-center text-sidebar-primary font-heading font-bold text-sm">
-            AJ
+            {initials}
           </div>
-          <div>
-            <p className="text-sm font-medium">Alex Johnson</p>
+          <div className="min-w-0">
+            <p className="text-sm font-medium truncate">{displayName || "Student"}</p>
             <p className="text-xs text-sidebar-foreground/50">Student</p>
           </div>
         </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={signOut}
+          className="w-full justify-start text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50 gap-2"
+        >
+          <LogOut className="h-4 w-4" /> Sign Out
+        </Button>
       </div>
     </aside>
   );
