@@ -55,9 +55,7 @@ export const weeklyActivity: WeeklyActivity[] = [
 ];
 
 export const subjectBreakdown = [
-  { name: "Mathematics", value: 30, fill: "hsl(var(--chart-1))" },
-  { name: "Science", value: 25, fill: "hsl(var(--chart-2))" },
-  { name: "Computer Science", value: 25, fill: "hsl(var(--chart-3))" },
-  { name: "Humanities", value: 12, fill: "hsl(var(--chart-4))" },
-  { name: "Language Arts", value: 8, fill: "hsl(var(--chart-5))" },
+  { name: "Personal Finance", value: 35, fill: "hsl(var(--chart-1))" },
+  { name: "Investing", value: 35, fill: "hsl(var(--chart-2))" },
+  { name: "Wealth Management", value: 30, fill: "hsl(var(--chart-3))" },
 ];
