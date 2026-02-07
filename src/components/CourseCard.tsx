@@ -1,7 +1,9 @@
-import { Course } from "@/lib/data";
+import { useNavigate } from "react-router-dom";
+import { CourseWithProgress } from "@/hooks/useCourses";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Star } from "lucide-react";
+import { Lock, Trophy, ChevronRight } from "lucide-react";
+import { motion } from "framer-motion";
 
 const difficultyColors = {
   beginner: "bg-success/15 text-success border-success/30",
@@ -9,12 +11,35 @@ const difficultyColors = {
   advanced: "bg-accent/15 text-accent border-accent/30",
 };
 
-export default function CourseCard({ course }: { course: Course }) {
+export default function CourseCard({ course, index = 0 }: { course: CourseWithProgress; index?: number }) {
+  const navigate = useNavigate();
+
   return (
-    <div className="group rounded-xl border border-border bg-card p-5 hover:border-primary/30 hover:shadow-md transition-all duration-300 animate-fade-in">
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.08, duration: 0.4 }}
+      className={`group relative rounded-2xl border bg-card p-5 transition-all duration-300 cursor-pointer
+        ${course.locked
+          ? "opacity-60 border-border cursor-not-allowed"
+          : "border-border hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1"
+        }`}
+      onClick={() => !course.locked && navigate(`/courses/${course.id}`)}
+    >
+      {course.locked && (
+        <div className="absolute inset-0 rounded-2xl bg-background/50 backdrop-blur-[2px] z-10 flex items-center justify-center">
+          <div className="text-center">
+            <Lock className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+            <p className="text-xs text-muted-foreground font-medium">
+              Complete {course.difficulty === "advanced" ? "intermediate" : "beginner"} courses first
+            </p>
+          </div>
+        </div>
+      )}
+
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
-          <span className="text-2xl">{course.icon}</span>
+          <span className="text-3xl">{course.icon}</span>
           <div>
             <h3 className="font-heading font-semibold text-sm group-hover:text-primary transition-colors">
               {course.title}
@@ -22,8 +47,10 @@ export default function CourseCard({ course }: { course: Course }) {
             <p className="text-xs text-muted-foreground">{course.subject}</p>
           </div>
         </div>
-        {course.recommended && (
-          <Star className="h-4 w-4 text-accent fill-accent" />
+        {course.progress === 100 ? (
+          <Trophy className="h-5 w-5 text-accent fill-accent" />
+        ) : (
+          <ChevronRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
         )}
       </div>
 
@@ -32,7 +59,7 @@ export default function CourseCard({ course }: { course: Course }) {
           {course.difficulty}
         </Badge>
         <span className="text-xs text-muted-foreground">
-          {course.completedLessons}/{course.totalLessons} lessons
+          {course.completedCount}/{course.totalChapters} chapters
         </span>
       </div>
 
@@ -43,11 +70,6 @@ export default function CourseCard({ course }: { course: Course }) {
         </div>
         <Progress value={course.progress} className="h-2" />
       </div>
-
-      <div className="mt-4 pt-3 border-t border-border/50 flex justify-between items-center">
-        <span className="text-xs text-muted-foreground">Avg. Score</span>
-        <span className="text-sm font-heading font-bold text-primary">{course.score}%</span>
-      </div>
-    </div>
+    </motion.div>
   );
 }

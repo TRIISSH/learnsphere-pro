@@ -14,7 +14,127 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      chapters: {
+        Row: {
+          chapter_order: number
+          course_id: string
+          created_at: string
+          id: string
+          title: string
+        }
+        Insert: {
+          chapter_order?: number
+          course_id: string
+          created_at?: string
+          id?: string
+          title: string
+        }
+        Update: {
+          chapter_order?: number
+          course_id?: string
+          created_at?: string
+          id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chapters_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      courses: {
+        Row: {
+          created_at: string
+          description: string | null
+          difficulty: string
+          icon: string | null
+          id: string
+          sort_order: number | null
+          subject: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          difficulty: string
+          icon?: string | null
+          id?: string
+          sort_order?: number | null
+          subject: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          difficulty?: string
+          icon?: string | null
+          id?: string
+          sort_order?: number | null
+          subject?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string
+          id: string
+          student_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string
+          id?: string
+          student_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string
+          id?: string
+          student_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_chapter_completions: {
+        Row: {
+          chapter_id: string
+          completed_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          chapter_id: string
+          completed_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          chapter_id?: string
+          completed_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_chapter_completions_chapter_id_fkey"
+            columns: ["chapter_id"]
+            isOneToOne: false
+            referencedRelation: "chapters"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
